@@ -4,7 +4,7 @@ import React from 'react'
 export default function Buy() {
   return (
     <View style = {styles.main}>
-      <Text style = {styles.text}>Buy</Text>
+      <Text style = {styles.text}>Ayarlar Ekranı</Text>
     </View>
   )
 }
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor : "blue",
+        backgroundColor : "white",
     },
 
     text: {

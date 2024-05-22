@@ -4,7 +4,7 @@ import React from 'react'
 export default function Account() {
   return (
     <View style = {styles.main}>
-      <Text style = {styles.text}>Account</Text>
+      <Text style = {styles.text}>Depreme Hazırlık Ekranı</Text>
     </View>
   )
 }
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor : "blue",
+        backgroundColor : "white",
     },
 
     text: {
