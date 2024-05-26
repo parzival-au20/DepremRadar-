@@ -6,11 +6,10 @@ import { FontAwesome6, Ionicons, MaterialCommunityIcons } from '@expo/vector-ico
 const Tab = createBottomTabNavigator();
 
 import Home from '../screens/Home';
-import Buy from '../screens/Buy';
-import Account from '../screens/Account';
-import Dashboard from '../screens/Dashboard';
-import { Image } from 'react-native-elements';
+import Tercihler from '../screens/Tercihler';
+import Tatbikat from '../screens/TatbikatMain';
 import HeaderRight from '../components/HeaderRight';
+import Harita from '../screens/Harita';
 
 
 export default function NavigationTabs( ) {
@@ -19,7 +18,7 @@ export default function NavigationTabs( ) {
       <Tab.Navigator 
             screenOptions={() => ({
                 headerShown : true,
-                tabBarStyle: {height:65,},
+                tabBarStyle: {height:75,},
                 tabBarInactiveTintColor:"#000000",
             })}>
 
@@ -38,7 +37,7 @@ export default function NavigationTabs( ) {
                 headerTitleStyle: { color: '#FFFFFF', fontSize: 22 }, // Başlık metninin stili
                 headerRight: () => <HeaderRight></HeaderRight>
             })}/>
-      <Tab.Screen name="Harita" component={Dashboard} 
+      <Tab.Screen name="Harita" component={Harita} 
             options={() => ({
                 tabBarIcon:() =>(
                     <FontAwesome6 name="map-location-dot" size={30} style={{color:"blue"}} />
@@ -52,21 +51,21 @@ export default function NavigationTabs( ) {
                 headerStyle: { backgroundColor: 'blue' }, // Başlık çubuğunun arka plan rengi
                 headerTitleStyle: { color: '#FFFFFF', fontSize: 22 }, // Başlık metninin stili
             })}/>
-      <Tab.Screen name="Tercihler" component={Account} 
+      <Tab.Screen name="Tatbikat" component={Tatbikat} 
             options={() => ({
                 tabBarIcon:() =>(
                     <MaterialCommunityIcons name="bag-checked" size={35} color="#EF3900" />
                 ),
-                tabBarLabel: 'Hazırlık', // Metin belirleme
+                tabBarLabel: 'Tatbikat', // Metin belirleme
                 tabBarLabelStyle: {fontSize : 14, fontWeight:"bold", marginBottom:10},
                 tabBarActiveBackgroundColor: '#FFDD6843',
-                tabBarActiveTintColor:"orange",
+                tabBarActiveTintColor:"#fb7f01",
                 tabBarItemStyle: {borderRadius:15, marginRight:10},
-                headerTitle: 'Depreme Hazırlık',
-                headerStyle: { backgroundColor: 'orange' }, // Başlık çubuğunun arka plan rengi
+                headerTitle: 'Deprem Tatbikatı',
+                headerStyle: { backgroundColor: '#fb7f01' }, // Başlık çubuğunun arka plan rengi
                 headerTitleStyle: { color: '#FFFFFF', fontSize: 22 }, // Başlık metninin stili
             })}/>
-      <Tab.Screen name="Buy" component={Buy} 
+      <Tab.Screen name="Tercihler" component={Tercihler} 
             options={() => ({
                 tabBarIcon:() =>(
                     <Ionicons name="settings" size={30} style={{color: "green"}} />

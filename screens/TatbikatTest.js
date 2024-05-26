@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 
-export default function Dashboard() {
+export default function Harita() {
   return (
     <View style = {styles.main}>
-      <Text style = {styles.text}>Haritalar Ekranı</Text>
+      <Text style = {styles.text}>Test Ekranı</Text>
     </View>
   )
 }

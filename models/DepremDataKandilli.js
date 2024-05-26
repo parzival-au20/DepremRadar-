@@ -5,22 +5,14 @@ class DepremDataKandilli {
         const { district, province } = this.processCity(title);
         this.province = province;
         this.district = district;
+        this.formattedDate = date;
         this.date = this.formatTime(date);
         this.mag = mag % 1 === 0 ? mag.toFixed(1) : mag;
         this.depth = depth;
-        this.latitude = coordinates[0];
-        this.longitude = coordinates[1];
+        this.latitude = coordinates[1];
+        this.longitude = coordinates[0];
       }
   
-    // Modelin davranışlarını veya yöntemlerini tanımlayabilirsiniz
-    method1() {
-      // Method 1'in işlevselliği buraya yazılır
-    }
-  
-    method2() {
-      // Method 2'nin işlevselliği buraya yazılır
-    }
-
     processCity = (cityString) => {
     const parts = cityString.split('('); // Şehir adı ve ilçe bilgisini ayır
     let district = parts[0].trim(); // Şehir adını al
@@ -62,9 +54,3 @@ class DepremDataKandilli {
   }
   
   export default DepremDataKandilli;
-  // Modeli kullanarak yeni bir örnek oluşturabilirsiniz
-  /*const myModel = new Model(value1, value2);
-  
-  // Örneğin özelliklerine veya yöntemlerine erişebilirsiniz
-  console.log(myModel.param1);
-  myModel.method1();*/

@@ -1,10 +1,12 @@
 class DepremDataAFAD {
     constructor(eventID, province, district, date, magnitude, depth, latitude, longitude) {
-      this.eventID = eventID;
-      this.province = province;
-      this.district = district;
+      this._id = eventID;
+      this.title = district+" "+province;
+      this.province = province.toLocaleUpperCase('tr-TR');;
+      this.district = district.toLocaleUpperCase('tr-TR');;
+      this.formattedDate = date;
       this.date = this.formatTime(date);
-      this.magnitude = typeof magnitude === 'string' ? parseFloat(magnitude).toFixed(1) : magnitude;
+      this.mag = typeof magnitude === 'string' ? parseFloat(magnitude).toFixed(1) : magnitude;
       this.depth = depth;
       this.latitude = latitude;
       this.longitude = longitude;
@@ -30,20 +32,6 @@ class DepremDataAFAD {
       }
     };
 
-    // Modelin davranışlarını veya yöntemlerini tanımlayabilirsiniz
-    method1() {
-      // Method 1'in işlevselliği buraya yazılır
-    }
-  
-    method2() {
-      // Method 2'nin işlevselliği buraya yazılır
-    }
   }
   
   export default DepremDataAFAD;
-  // Modeli kullanarak yeni bir örnek oluşturabilirsiniz
-  /*const myModel = new Model(value1, value2);
-  
-  // Örneğin özelliklerine veya yöntemlerine erişebilirsiniz
-  console.log(myModel.param1);
-  myModel.method1();*/

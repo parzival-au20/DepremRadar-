@@ -8,7 +8,7 @@ import { faRulerVertical,faAngleRight } from '@fortawesome/free-solid-svg-icons'
 export default function ResultAfadDetail({ result }) {
   //console.log("AfadResultDetail => "+result);
 
-const magValue = parseFloat(result.magnitude);
+const magValue = parseFloat(result.mag);
 let blankColor = "#009247"; // Varsayılan renk
 let textColor = "#009247";
 let magBlockColor = "#ebfff4";
@@ -33,7 +33,7 @@ if (magValue >= 4) {
           <View style = {[styles.blank, { backgroundColor: blankColor }]}>
           </View>
           <View style = {[styles.magBlock, {backgroundColor : magBlockColor}]}>
-            <Text style = {[styles.mag, { color: textColor}]}>{result.magnitude}</Text>
+            <Text style = {[styles.mag, { color: textColor}]}>{result.mag}</Text>
           </View>
           <View style = {styles.info}>
             <Text numberOfLines={1} ellipsizeMode="tail" style = {styles.name}>{result.district}</Text>

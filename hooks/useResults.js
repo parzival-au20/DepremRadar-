@@ -103,10 +103,6 @@ export const ResultsProvider = ({ children }) =>  {
     console.log("useeffect "+selectedResource);
   }, [selectedResource, selectedTime]);
 
-  /*useEffect(() => {
-    // selectedResource veya selectedTime değiştiğinde veriyi tekrar çek
-    searchApi(selectedResource, selectedTime);
-  }, [selectedResource, selectedTime]);*/
 
 
  return (

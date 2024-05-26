@@ -10,6 +10,22 @@ import HeaderRight from '../components/HeaderRight';
 export default function Home({ navigation, route }) {
   const { selectedResource, selectedTime } = useResultsContext();
   const { results, errorMessage, loading } = useResultsContext();
+  const [imageSource, setImageSource] = useState(require('../assets/kandilli.png'));
+
+  useEffect(() => {
+    // selectedResource değerine göre hangi görüntünün gösterileceğini belirleyin
+    let newImageSource;
+    if (selectedResource === 'kandilli') {
+      newImageSource = require('../assets/kandilli.png');
+    } else if (selectedResource === 'afad') {
+      newImageSource = require('../assets/AFAD.png');
+    } else if (selectedResource === 'csem') {
+      newImageSource = require('../assets/csem1.jpg');
+    }
+    // Görüntüyü güncelleyin
+    setImageSource(newImageSource);
+  }, [selectedResource]);
+
 
   console.log("Homescreen "+selectedResource);
   //console.log(results);
@@ -19,7 +35,11 @@ export default function Home({ navigation, route }) {
     const endTime = new Date(currentTime.getTime() - selectedTimeMilliseconds);
     
     filteredResults = filteredResults.filter(result => {
-      const resultDate = DateFormatting(result.date)
+      let resultDate =""
+      if (result.formattedDate != undefined){
+        resultDate = DateFormatting(result.formattedDate)
+      }
+      console.log(resultDate+"   "+endTime+"  "+currentTime+" "+selectedTime);
       return resultDate >= endTime && resultDate <= currentTime;
     });
 
@@ -27,6 +47,7 @@ export default function Home({ navigation, route }) {
   }
   const filterResultsByMag = () => {
     let filteredResults = results;
+    //console.log(results);
     if (buttonClicked[0]) {
       filteredResults = filteredResults.filter(result => result.mag < 2 );
     }
@@ -41,7 +62,7 @@ export default function Home({ navigation, route }) {
       filteredResults = filteredResults.filter(result => 4 <= result.mag);
     }
     //return filterResultsByTime(filteredResults);
-    return (filteredResults);
+    return filterResultsByTime(filteredResults);
   };
   const [buttonClicked, setButtonClicked] = useState([false, false, false, false]);
 
@@ -72,10 +93,12 @@ export default function Home({ navigation, route }) {
   return (
     <View style={styles.main}>      
       <View style={styles.filterBar}>
-          <Image
-            source={require('../assets/kandilli.png')}
-            style={{ width: 85, height:50, marginLeft:5,}}
-          />
+          {imageSource && (
+            <Image
+              source={imageSource}
+              style={{ width: 85, height: 50, marginLeft: 5 }}
+            />
+          )}
           <FilterButtons buttonClicked={buttonClicked} onButtonClick={handleButtonClick} />
       </View>
         {errorMessage ? (<Text style = {styles.errorMessage}>{errorMessage}</Text>) : 
@@ -84,9 +107,9 @@ export default function Home({ navigation, route }) {
                 <Text style={styles.errorMessage}>Aradığınız Terim Bulunamadı !</Text>
               ) : (
                 (selectedResource === 'kandilli') ? (
-                  <ResultsList results={filterResultsByMag()} />
+                  <ResultsList results={(filterResultsByMag())} />
                 ) : (
-                  <ResultsAfadList results={results} />
+                  <ResultsAfadList results={filterResultsByMag()} />
                 )
               )}
             </>
@@ -95,17 +118,25 @@ export default function Home({ navigation, route }) {
   );
 }
 function DateFormatting(resultDate){
-  const dateTimeParts = resultDate.split(' ');
-  const dateParts = dateTimeParts[0].split('.');
-  const timeParts = dateTimeParts[1].split(':');
-  const year = parseInt(dateParts[0]);
-  const month = parseInt(dateParts[1]) - 1; // JavaScript'te ay 0'dan başlar, bu yüzden 1 çıkarıyoruz
-  const day = parseInt(dateParts[2]);
-  const hour = parseInt(timeParts[0]);
-  const minute = parseInt(timeParts[1]);
-  const second = parseInt(timeParts[2]);
-  
-  const dateObject = new Date(year, month, day, hour, minute, second);
+  let dateObject;
+
+  if (resultDate.includes('T')) {
+    dateObject = new Date(resultDate);
+    dateObject.setHours(dateObject.getHours() + 3);
+  } else {
+    // Birinci formatı işleme
+    const dateTimeParts = resultDate.split(' ');
+    const dateParts = dateTimeParts[0].split('.');
+    const timeParts = dateTimeParts[1].split(':');
+    const year = parseInt(dateParts[0]);
+    const month = parseInt(dateParts[1]) - 1; // JavaScript'te ay 0'dan başlar, bu yüzden 1 çıkarıyoruz
+    const day = parseInt(dateParts[2]);
+    const hour = parseInt(timeParts[0]);
+    const minute = parseInt(timeParts[1]);
+    const second = parseInt(timeParts[2]);
+
+    dateObject = new Date(year, month, day, hour, minute, second);
+  }
   return dateObject;
 }
 

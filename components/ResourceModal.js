@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
         justifyContent : "center",
         borderColor: "blue",
         backgroundColor: "rgba(0, 0, 0, 0.5)",
+        //backgroundColor:"blue"
     },
     modalView : {
         alignItems :"center",

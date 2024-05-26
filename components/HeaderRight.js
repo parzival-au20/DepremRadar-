@@ -9,9 +9,8 @@ import { useResultsContext } from '../hooks/useResults';
 export default function HeaderRight() {
     const [modalIsVisible, setModalIsVisible] = useState(false);
     const [modalTimeIsVisible, setModalTimeIsVisible] = useState(false);
-    const { selectedResource, setSelectedResource } = useResultsContext();
-    const [selectedTime, setSelectedTime] = useState("24");
-    //console.log(onSelectResource,onSelectTime);
+    const { selectedResource, setSelectedResource, selectedTime, setSelectedTime } = useResultsContext();
+    //console.log(selectedTime,selectedResource);
     const startModal = () => {
         setModalIsVisible(true);
     };
@@ -25,15 +24,13 @@ export default function HeaderRight() {
         setModalTimeIsVisible(false);
     };
     const selectResource = (resource) => {
-        console.log("girdi "+resource);
+        //console.log("girdi "+resource);
         setSelectedResource(resource);
         endModal();
-        //navigation.navigate('Home', { selectedResource: resource, selectedTime: selectedTime });
     };
     const selectTime = (time) => {
         setSelectedTime(time);
         endModalTime();
-        //navigation.navigate('Home', { selectedResource: selectedResource, selectedTime: time });
     };
   return (
     <View style={{ flexDirection: 'row', marginRight: 20 }}>
