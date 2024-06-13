@@ -1,11 +1,11 @@
-import React, { createContext, useContext, useState } from 'react';
-import { useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import getData from '../api/kandilliAPI';
 import getDataAfad from '../api/afadAPI';
 import getDataCsem from '../api/csemAPI';
 import DepremDataAFAD from "../models/DepremData";
 import DepremDataKandilli from '../models/DepremDataKandilli';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ResultsContext = createContext();
 
@@ -19,10 +19,16 @@ export const ResultsProvider = ({ children }) =>  {
   const [loading, setLoading] = useState(false);
   const [selectedResource, setSelectedResource] = useState('kandilli');
   const [selectedTime, setSelectedTime] = useState("24");
+  const [ selectedRes, setSelectedRes] = useState('kandilli');
+  const [selectedMenuTime, setSelectedMenuTime] = useState("24");
   const navigation = useNavigation();
 
   const currentTime = new Date();
   const oneDayAgo = new Date(currentTime.getTime() - (24 * 60 * 60 * 1000));
+
+  // AsyncStorage anahtarları
+  const RESOURCE_KEY = 'selectedResource';
+  const TIME_KEY = 'selectedTime';
 
   const searchApi = async (resource, time) => {
     setLoading(true);
@@ -99,14 +105,48 @@ export const ResultsProvider = ({ children }) =>  {
 
   useEffect(() => {
     // Uygulama ilk açıldığında veriyi çek
+    const loadPreferences = async () => {
+      try {
+        const savedResource = await AsyncStorage.getItem(RESOURCE_KEY);
+        const savedTime = await AsyncStorage.getItem(TIME_KEY);
+        if (savedResource) setSelectedResource(savedResource);
+        if (savedTime) setSelectedTime(savedTime);
+      } catch (e) {
+        console.error("Failed to load preferences.", e);
+      }
+    };
+
+    loadPreferences();
+  }, []);
+
+  /*useEffect(() => {
+    // Seçili kaynak veya zaman değiştiğinde veriyi çek ve kaydet
+    if (selectedResource && selectedTime) {
+      searchApi(selectedResource, selectedTime);
+    }
+
+    const savePreferences = async () => {
+      try {
+        await AsyncStorage.setItem(RESOURCE_KEY, selectedResource);
+        await AsyncStorage.setItem(TIME_KEY, selectedTime);
+      } catch (e) {
+        console.error("Failed to save preferences.", e);
+      }
+    };
+
+    savePreferences();
+  }, [selectedResource, selectedTime]);*/
+
+  /*useEffect(() => {
+    // Uygulama ilk açıldığında veriyi çek
     searchApi(selectedResource, selectedTime);
     console.log("useeffect "+selectedResource);
-  }, [selectedResource, selectedTime]);
+  }, [selectedResource, selectedTime]);*/
 
 
 
  return (
-    <ResultsContext.Provider value={{ selectedResource, selectedTime, setSelectedResource, setSelectedTime, results, errorMessage, loading, searchApi }}>
+    <ResultsContext.Provider value={{ selectedResource, selectedTime, selectedMenuTime, selectedRes, setSelectedRes, setSelectedMenuTime, setSelectedResource, setSelectedTime, results, errorMessage, loading, searchApi }}>
       {children}
     </ResultsContext.Provider>
   );

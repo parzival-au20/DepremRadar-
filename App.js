@@ -7,7 +7,7 @@ import { NavigationContainer} from '@react-navigation/native'
 import HeaderRight from './components/HeaderRight';
 import Home from './screens/Home';
 import ResultsProvider from './hooks/useResults';
-
+import SplashScreen from './screens/splashScreen';
 
 const Stack = createStackNavigator();
 
@@ -22,6 +22,10 @@ export default function App() {
     <NavigationContainer>
       <ResultsProvider>
           <Stack.Navigator screenOptions={{headerShown:false}}>
+          <Stack.Screen
+            name="Splash"
+            component={SplashScreen}
+          />
           <Stack.Screen
           name="Deprem"
           component={ScreenOverView}

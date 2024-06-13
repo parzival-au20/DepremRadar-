@@ -4,34 +4,48 @@ import {useResults, useResultsContext} from '../hooks/useResults'
 import ResultsList from '../components/ResultsList';
 import ResultsAfadList from '../components/ResultsAfadList';
 import FilterButtons from '../components/FilterButtons';
-import { useRoute } from '@react-navigation/native';
-import HeaderRight from '../components/HeaderRight';
 
-export default function Home({ navigation, route }) {
+
+export default function Home() {
   const { selectedResource, selectedTime } = useResultsContext();
+  const { selectedMenuTime, selectedRes, setSelectedRes } = useResultsContext();
   const { results, errorMessage, loading } = useResultsContext();
   const [imageSource, setImageSource] = useState(require('../assets/kandilli.png'));
+  const [selectedFilterTime, setSelectedFilterTime] = useState(selectedTime);
+  const [newImageSource, setNewImageSource] = useState(imageSource);
+
+  useEffect(() => {
+    setSelectedRes(selectedResource);
+  }, [selectedResource]);
 
   useEffect(() => {
     // selectedResource değerine göre hangi görüntünün gösterileceğini belirleyin
     let newImageSource;
-    if (selectedResource === 'kandilli') {
+    if (selectedRes === 'kandilli') {
       newImageSource = require('../assets/kandilli.png');
-    } else if (selectedResource === 'afad') {
+    } else if (selectedRes === 'afad') {
       newImageSource = require('../assets/AFAD.png');
-    } else if (selectedResource === 'csem') {
+    } else if (selectedRes === 'csem') {
       newImageSource = require('../assets/csem1.jpg');
     }
     // Görüntüyü güncelleyin
     setImageSource(newImageSource);
-  }, [selectedResource]);
+  }, [selectedRes]);
 
+  useEffect(() => {
+      setSelectedFilterTime(selectedMenuTime);
+  }, [selectedMenuTime, selectedTime]);
+
+  useEffect(() => {
+    setSelectedFilterTime(selectedTime);
+    }, [selectedTime]);
 
   console.log("Homescreen "+selectedResource);
   //console.log(results);
   const filterResultsByTime = (filteredResults) => {
+    console.log("filteredTime: "+selectedFilterTime);
     const currentTime = new Date();
-    const selectedTimeMilliseconds = selectedTime * 60 * 60 * 1000;
+    const selectedTimeMilliseconds = selectedFilterTime * 60 * 60 * 1000;
     const endTime = new Date(currentTime.getTime() - selectedTimeMilliseconds);
     
     filteredResults = filteredResults.filter(result => {
@@ -39,14 +53,14 @@ export default function Home({ navigation, route }) {
       if (result.formattedDate != undefined){
         resultDate = DateFormatting(result.formattedDate)
       }
-      console.log(resultDate+"   "+endTime+"  "+currentTime+" "+selectedTime);
+      //console.log(resultDate+"   "+endTime+"  "+currentTime+" "+selectedTime);
       return resultDate >= endTime && resultDate <= currentTime;
     });
-
+    //setFilteredResults(filteredResults);
     return filteredResults;
   }
   const filterResultsByMag = () => {
-    let filteredResults = results;
+    let filteredResults = [...results];
     //console.log(results);
     if (buttonClicked[0]) {
       filteredResults = filteredResults.filter(result => result.mag < 2 );

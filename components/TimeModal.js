@@ -1,9 +1,30 @@
 import { StyleSheet, Text, View, Modal, Image, TouchableOpacity } from 'react-native'
-import {React, useState} from 'react'
+import {React, useState, useEffect} from 'react'
 import { FontAwesome, Feather  } from '@expo/vector-icons';
+import { useResultsContext } from '../hooks/useResults';
 
 export default function ResourceModal({ visible, onSelectTime }) {
+
+    const { selectedTime } = useResultsContext();
     const [selectedIconIndex, setSelectedIconIndex] = useState(2);
+
+    useEffect(() => {
+        // Update selectedIconIndex based on selectedTime
+        switch (selectedTime) {
+            case '1':
+                setSelectedIconIndex(0);
+                break;
+            case '12':
+                setSelectedIconIndex(1);
+                break;
+            case '24':
+                setSelectedIconIndex(2);
+                break;
+            default:
+                setSelectedIconIndex(2);
+                break;
+        }
+    }, [selectedTime]);
 
     const timeHandlerOneHours = () => {
         onSelectTime("1");

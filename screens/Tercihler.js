@@ -1,10 +1,83 @@
 import { StyleSheet, Text, View, Image, Platform, TouchableOpacity} from 'react-native'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faRulerVertical,faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import ResourceModal from '../components/ResourceModal';
+import TimeModal from '../components/TimeModal';
+import { useResultsContext } from '../hooks/useResults';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-export default function Tercihler() {
+import Gizlilik from './Gizlilik';
+
+const OnlemStack  = createNativeStackNavigator();
+
+
+function TercihlerMain() {
+  const [modalIsVisible, setModalIsVisible] = useState(false);
+  const [modalTimeIsVisible, setModalTimeIsVisible] = useState(false);
+  const {selectedResource, setSelectedResource, selectedTime, setSelectedTime, searchApi } = useResultsContext();
+  //const [selectedResource, setSelectedResource] = useState('kandilli');
+  //const [selectedTime, setSelectedTime] = useState("24");
+
+  const navigation = useNavigation();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Üst seviye action bar'ı göstermek için ayarları değiştirin
+      navigation.getParent()?.setOptions({ headerShown: true });
+      return () => {
+        // Ekrandan çıkıldığında üst seviye action bar'ı gizleyin
+        navigation.getParent()?.setOptions({ headerShown: false });
+      };
+    }, [navigation])
+  );
+
+  // AsyncStorage anahtarları
+  const RESOURCE_KEY = 'selectedResource';
+  const TIME_KEY = 'selectedTime';
+
+  useEffect(() => {
+    if (selectedResource && selectedTime) {
+      searchApi(selectedResource, selectedTime);
+    }
+
+    const savePreferences = async () => {
+      try {
+        await AsyncStorage.setItem(RESOURCE_KEY, selectedResource);
+        await AsyncStorage.setItem(TIME_KEY, selectedTime);
+      } catch (error) {
+        console.error("Failed to save preferences.", error);
+      }
+    };
+
+    savePreferences();
+  }, [selectedResource, selectedTime]);
+
+  const startModal = () => {
+      setModalIsVisible(true);
+  };
+  const endModal = () => {
+      setModalIsVisible(false);
+  };
+  const startModalTime = () => {
+      setModalTimeIsVisible(true);
+  };
+  const endModalTime = () => {
+      setModalTimeIsVisible(false);
+  };
+  const selectResource = async (resource) => {
+      await AsyncStorage.setItem(RESOURCE_KEY, resource);
+      setSelectedResource(resource);
+      endModal();
+  };
+  const selectTime = async (time) => {
+      await AsyncStorage.setItem(TIME_KEY, time);
+      setSelectedTime(time);
+      endModalTime();
+  };
 
   let blankColor = "#009247"; // Varsayılan renk
   let textColor = "#009247";
@@ -14,7 +87,7 @@ export default function Tercihler() {
       <View style = {styles.title}>
         <Text style = {styles.titleFont}>ANASAYFA TERCİHLERİ</Text>
       </View>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={startModal}>
         <View style = {styles.ListItem}>
           <View style = {styles.imageContainer}>
             <Image
@@ -48,7 +121,7 @@ export default function Tercihler() {
       </View>
       </TouchableOpacity>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={startModalTime}>
         <View style = {styles.ListItem}>
           <View style = {styles.imageContainer}>
               <AntDesign name="clockcircle" size={40} color="gray" style={{marginLeft:0 }}/>
@@ -62,10 +135,15 @@ export default function Tercihler() {
       </View>
       </TouchableOpacity>
       
+      <ResourceModal visible={modalIsVisible} onSelectResource={selectResource}></ResourceModal>
+      <TimeModal visible={modalTimeIsVisible} onSelectTime={selectTime}></TimeModal>
+
       <View style = {[styles.title, {marginTop:10}]}>
         <Text style = {styles.titleFont}>DİĞER</Text>
       </View>
-      <TouchableOpacity>
+      <TouchableOpacity 
+              onPress={()=>
+                navigation.navigate("Gizlilik")}>
         <View style = {styles.ListItem}>
           <View style = {styles.imageContainer}>
             <Image
@@ -101,6 +179,26 @@ export default function Tercihler() {
     </View>
   )
 }
+
+export default function Tercihler() {
+
+  const navigation = useNavigation();
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Üst seviye action bar'ı gizlemek için ayarları değiştirin
+      navigation.getParent()?.setOptions({ headerShown: false });
+    }, [navigation])
+  );
+  
+  return (
+    <OnlemStack.Navigator screenOptions={{ headerStyle: { backgroundColor: '#009247' }, headerTintColor: '#fff', headerTitleStyle: { fontWeight: 'bold' } }}>
+      <OnlemStack.Screen name="TercihlerMain" component={TercihlerMain} options={{ headerShown: false }} />
+      <OnlemStack.Screen name="Gizlilik" component={Gizlilik} options={{ title: 'Gizlilik İlkeleri' }}/>
+    </OnlemStack.Navigator>
+  )
+}
+
 
 const styles = StyleSheet.create({
     main:{

@@ -4,13 +4,45 @@ import { FontAwesome5, MaterialCommunityIcons  } from '@expo/vector-icons';
 import ResourceModal from '../components/ResourceModal';
 import TimeModal from '../components/TimeModal';
 import { useResultsContext } from '../hooks/useResults';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HeaderRight() {
     const [modalIsVisible, setModalIsVisible] = useState(false);
     const [modalTimeIsVisible, setModalTimeIsVisible] = useState(false);
-    const { selectedResource, setSelectedResource, selectedTime, setSelectedTime } = useResultsContext();
+    const [ selectedResource, setSelectedResource]= useState();
+    const [ selectedTime, setSelectedTime] = useState();
+    const {searchApi } = useResultsContext();
+    const { selectedRes, setSelectedRes} = useResultsContext();
+    const { selectedMenuTime, setSelectedMenuTime } = useResultsContext();
     //console.log(selectedTime,selectedResource);
+
+    // AsyncStorage anahtarları
+  const RESOURCE_KEY = 'selectedResource';
+  const TIME_KEY = 'selectedTime';
+
+    useEffect(() => {
+        // Uygulama ilk açıldığında veriyi çek
+        const loadPreferences = async () => {
+          try {
+            const savedResource = await AsyncStorage.getItem(RESOURCE_KEY);
+            const savedTime = await AsyncStorage.getItem(TIME_KEY);
+            if (savedResource) setSelectedResource(savedResource);
+            if (savedTime) setSelectedTime(savedTime);
+          } catch (e) {
+            console.error("Failed to load preferences.", e);
+          }
+        };
+    
+        loadPreferences();
+      }, []);
+
+      useEffect(() => {
+        if (selectedRes) {
+          searchApi(selectedRes);
+        }
+      }, [selectedRes]);
+
+
     const startModal = () => {
         setModalIsVisible(true);
     };
@@ -25,11 +57,11 @@ export default function HeaderRight() {
     };
     const selectResource = (resource) => {
         //console.log("girdi "+resource);
-        setSelectedResource(resource);
+        setSelectedRes(resource);
         endModal();
     };
     const selectTime = (time) => {
-        setSelectedTime(time);
+        setSelectedMenuTime(time);
         endModalTime();
     };
   return (

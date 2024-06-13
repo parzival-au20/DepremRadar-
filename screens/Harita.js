@@ -7,27 +7,13 @@ import {useResults, useResultsContext} from '../hooks/useResults'
 
 const { width, height } = Dimensions.get('window');
 
-const earthquakeData = [
-  {
-    id: 1,
-    title: "Deprem 1",
-    coordinates: { latitude: 37.7749, longitude: -122.4194 },
-    magnitude: 4.5
-  },
-  {
-    id: 2,
-    title: "Deprem 2",
-    coordinates: { latitude: 34.0522, longitude: -118.2437 },
-    magnitude: 5.2
-  },
-  // Daha fazla deprem verisi ekleyin
-];
 
 
 export default function Harita() {
   const { results, errorMessage, loading } = useResultsContext();
   const [location, setLocation] = useState({ latitude: 0, longitude: 0 });
   const [region, setRegion] = useState(null);
+
 
   useEffect(() => {
     (async () => {
